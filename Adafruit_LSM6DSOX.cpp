@@ -89,3 +89,23 @@ void Adafruit_LSM6DSOX::enableI2CMasterPullups(bool enable_pullups) {
   i2c_master_pu_en.write(enable_pullups);
   master_cfg_enable_bit.write(false);
 }
+
+void Adafruit_LSM6DSOX::enableTilt()
+{
+  Adafruit_BusIO_Register emb_fun_en = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_EN_A);
+  Adafruit_BusIO_RegisterBits til_en =
+      Adafruit_BusIO_RegisterBits(&emb_fun_en, 1, 4);
+
+  tilt_en.write(true);
+}
+
+bool Adafruit_LSM6DSOX::tilt()
+{
+  Adafruit_BusIO_Register emb_fun_status = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_STATUS);
+  Adafruit_BusIO_RegisterBits til =
+      Adafruit_BusIO_RegisterBits(&emb_fun_status, 1, 4);
+
+  return tilt.read();
+}

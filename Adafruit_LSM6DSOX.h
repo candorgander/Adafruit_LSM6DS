@@ -24,6 +24,8 @@
 
 #define LSM6DSOX_FUNC_CFG_ACCESS 0x1 ///< Enable embedded functions register
 #define LSM6DSOX_PIN_CTRL 0x2        ///< Pin control register
+#define LSM6DSOX_EMB_FUNC_EN_A 0x4 ///< Enable embedded functions register
+#define LSM6DSOX_EMB_FUNC_STATUS 0X12 ///< Embedded function status register
 
 #define LSM6DSOX_INT1_CTRL 0x0D ///< Interrupt enable for data ready
 #define LSM6DSOX_CTRL1_XL 0x10  ///< Main accelerometer config register
@@ -45,6 +47,8 @@ public:
 
   void enableI2CMasterPullups(bool enable_pullups);
   void disableSPIMasterPullups(bool disable_pullups);
+  void enableTilt();
+  void tilt();
 
 private:
   bool _init(int32_t sensor_id);
