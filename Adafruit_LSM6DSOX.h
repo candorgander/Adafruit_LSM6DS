@@ -48,7 +48,7 @@ public:
   void enableI2CMasterPullups(bool enable_pullups);
   void disableSPIMasterPullups(bool disable_pullups);
   void enableTilt();
-  void tilt();
+  bool tilt();
 
 private:
   bool _init(int32_t sensor_id);

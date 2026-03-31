@@ -92,20 +92,44 @@ void Adafruit_LSM6DSOX::enableI2CMasterPullups(bool enable_pullups) {
 
 void Adafruit_LSM6DSOX::enableTilt()
 {
+  Adafruit_BusIO_Register func_cfg_access = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_FUNC_CFG_ACCESS);
+  Adafruit_BusIO_RegisterBits shub_access_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 6);
+  Adafruit_BusIO_RegisterBits func_cfg_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 7);
   Adafruit_BusIO_Register emb_fun_en = Adafruit_BusIO_Register(
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_EN_A);
-  Adafruit_BusIO_RegisterBits til_en =
+  Adafruit_BusIO_RegisterBits tilt_en =
       Adafruit_BusIO_RegisterBits(&emb_fun_en, 1, 4);
-
-  tilt_en.write(true);
+    
+  shub_access_bit.write(true);
+  func_cfg_bit.write(true);
+  if(!tilt_en.write(true))
+  {
+    Serial.println("Failed to enable tilt!!!");
+  }
+  shub_access_bit.write(false);
+  func_cfg_bit.write(false);
 }
 
 bool Adafruit_LSM6DSOX::tilt()
 {
+  Adafruit_BusIO_Register func_cfg_access = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_FUNC_CFG_ACCESS);
+  Adafruit_BusIO_RegisterBits shub_access_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 6);
+  Adafruit_BusIO_RegisterBits func_cfg_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 7);
   Adafruit_BusIO_Register emb_fun_status = Adafruit_BusIO_Register(
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_STATUS);
-  Adafruit_BusIO_RegisterBits til =
+  Adafruit_BusIO_RegisterBits tilt =
       Adafruit_BusIO_RegisterBits(&emb_fun_status, 1, 4);
+  shub_access_bit.write(true);
+  func_cfg_bit.write(true);
+  bool ret = tilt.read();
+  shub_access_bit.write(false);
+  func_cfg_bit.write(false);
 
-  return tilt.read();
+  return ret;
 }
