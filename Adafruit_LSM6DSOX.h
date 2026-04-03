@@ -26,7 +26,9 @@
 #define LSM6DSOX_PIN_CTRL 0x2        ///< Pin control register
 #define LSM6DSOX_EMB_FUNC_EN_A 0x4 ///< Enable embedded functions register
 #define LSM6DSOX_EMB_FUNC_STATUS 0X12 ///< Embedded function status register
-
+#define LSM6DSOX_MD2_CFG 0x5F
+#define EMB_FUNC_INIT_A 0x66
+#define EMB_FUNC_INIT_B 0x67
 #define LSM6DSOX_INT1_CTRL 0x0D ///< Interrupt enable for data ready
 #define LSM6DSOX_CTRL1_XL 0x10  ///< Main accelerometer config register
 #define LSM6DSOX_CTRL2_G 0x11   ///< Main gyro config register
@@ -49,6 +51,7 @@ public:
   void disableSPIMasterPullups(bool disable_pullups);
   void enableTilt();
   bool tilt();
+  void attachTiltInt(int int_no);
 
 private:
   bool _init(int32_t sensor_id);

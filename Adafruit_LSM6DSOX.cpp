@@ -133,3 +133,27 @@ bool Adafruit_LSM6DSOX::tilt()
 
   return ret;
 }
+
+void attachTiltInt(int int_no)
+{
+    Adafruit_BusIO_Register mdcfg;
+    if(int_no == 1)
+    {
+    mdcfg = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DS_MD1_CFG);
+    }
+    else if(int_no == 2)
+    {
+    mdcfg = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_MD2_CFG); 
+    }
+
+  Adafruit_BusIO_RegisterBits emb_int = Adafruit_BusIO_RegisterBits(&mdcfg, 1, 1);
+  emb_int.write(true);
+
+  Adafruit_BusIO_Register emb_fuc_int = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, EMB_FUNC_INIT_A);
+  Adafruit_BusIO_RegisterBits tilt =
+      Adafruit_BusIO_RegisterBits(&emb_fuc_int, 1, 4);
+    tilt.write(true);
+}
