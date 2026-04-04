@@ -102,6 +102,11 @@ void Adafruit_LSM6DSOX::enableTilt()
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_EN_A);
   Adafruit_BusIO_RegisterBits tilt_en =
       Adafruit_BusIO_RegisterBits(&emb_fun_en, 1, 4);
+  Adafruit_BusIO_Register emb_fuc_int = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, EMB_FUNC_INIT_A);
+  Adafruit_BusIO_RegisterBits tilt =
+      Adafruit_BusIO_RegisterBits(&emb_fuc_int, 1, 4);
+    
     
   shub_access_bit.write(true);
   func_cfg_bit.write(true);
@@ -109,6 +114,7 @@ void Adafruit_LSM6DSOX::enableTilt()
   {
     Serial.println("Failed to enable tilt!!!");
   }
+  tilt.write(true);
   shub_access_bit.write(false);
   func_cfg_bit.write(false);
 }
@@ -134,26 +140,51 @@ bool Adafruit_LSM6DSOX::tilt()
   return ret;
 }
 
-void attachTiltInt(int int_no)
+void Adafruit_LSM6DSOX::attachTiltInt(int int_no)
 {
-    Adafruit_BusIO_Register mdcfg;
+  Adafruit_BusIO_Register func_cfg_access = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_FUNC_CFG_ACCESS);
+  Adafruit_BusIO_RegisterBits shub_access_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 6);
+  Adafruit_BusIO_RegisterBits func_cfg_bit =
+      Adafruit_BusIO_RegisterBits(&func_cfg_access, 1, 7);
+  Adafruit_BusIO_Register emb_fun_en = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_EMB_FUNC_EN_A);
+  Adafruit_BusIO_RegisterBits tilt_en =
+      Adafruit_BusIO_RegisterBits(&emb_fun_en, 1, 4);
+
     if(int_no == 1)
     {
-    mdcfg = Adafruit_BusIO_Register(
+    Adafruit_BusIO_Register mdcfg = Adafruit_BusIO_Register(
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DS_MD1_CFG);
+    Adafruit_BusIO_RegisterBits emb_int = Adafruit_BusIO_RegisterBits(&mdcfg, 1, 1);
+      emb_int.write(true);
+      Adafruit_BusIO_Register emb_fuc_int = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, EMB_FUNC_INT1);
+    Adafruit_BusIO_RegisterBits tilt =
+        Adafruit_BusIO_RegisterBits(&emb_fuc_int, 1, 4);
+    
+        shub_access_bit.write(true);
+        func_cfg_bit.write(true);
+        tilt.write(true);
+        shub_access_bit.write(false);
+        func_cfg_bit.write(false);
     }
     else if(int_no == 2)
     {
-    mdcfg = Adafruit_BusIO_Register(
+    Adafruit_BusIO_Register mdcfg = Adafruit_BusIO_Register(
       i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, LSM6DSOX_MD2_CFG); 
+    Adafruit_BusIO_RegisterBits emb_int = Adafruit_BusIO_RegisterBits(&mdcfg, 1, 1);
+        emb_int.write(true);
+      Adafruit_BusIO_Register emb_fuc_int = Adafruit_BusIO_Register(
+      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, EMB_FUNC_INT2);
+    Adafruit_BusIO_RegisterBits tilt =
+        Adafruit_BusIO_RegisterBits(&emb_fuc_int, 1, 4);
+    
+        shub_access_bit.write(true);
+        func_cfg_bit.write(true);
+        tilt.write(true);
+        shub_access_bit.write(false);
+        func_cfg_bit.write(false);
     }
-
-  Adafruit_BusIO_RegisterBits emb_int = Adafruit_BusIO_RegisterBits(&mdcfg, 1, 1);
-  emb_int.write(true);
-
-  Adafruit_BusIO_Register emb_fuc_int = Adafruit_BusIO_Register(
-      i2c_dev, spi_dev, ADDRBIT8_HIGH_TOREAD, EMB_FUNC_INIT_A);
-  Adafruit_BusIO_RegisterBits tilt =
-      Adafruit_BusIO_RegisterBits(&emb_fuc_int, 1, 4);
-    tilt.write(true);
 }

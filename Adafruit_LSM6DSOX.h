@@ -26,9 +26,11 @@
 #define LSM6DSOX_PIN_CTRL 0x2        ///< Pin control register
 #define LSM6DSOX_EMB_FUNC_EN_A 0x4 ///< Enable embedded functions register
 #define LSM6DSOX_EMB_FUNC_STATUS 0X12 ///< Embedded function status register
-#define LSM6DSOX_MD2_CFG 0x5F
-#define EMB_FUNC_INIT_A 0x66
-#define EMB_FUNC_INIT_B 0x67
+#define LSM6DSOX_MD2_CFG 0x5F ///< INT2 Config register
+#define EMB_FUNC_INIT_A 0x66 ///< Embedded function Initialization register A
+#define EMB_FUNC_INIT_B 0x67 ///< Embedded function Initialization register B
+#define EMB_FUNC_INT1 0x0A ///< Embedded function INT1 Routing register
+#define EMB_FUNC_INT2 0x0E ///< Embedded function INT2 Routing register
 #define LSM6DSOX_INT1_CTRL 0x0D ///< Interrupt enable for data ready
 #define LSM6DSOX_CTRL1_XL 0x10  ///< Main accelerometer config register
 #define LSM6DSOX_CTRL2_G 0x11   ///< Main gyro config register
